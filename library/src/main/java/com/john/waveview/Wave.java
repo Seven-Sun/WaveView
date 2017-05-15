@@ -23,19 +23,23 @@ class Wave extends View {
     private final float WAVE_HZ_SLOW = 0.05f;
 
     public final int DEFAULT_ABOVE_WAVE_ALPHA = 50;
-    public final int DEFAULT_BLOW_WAVE_ALPHA = 30;
+    public final int DEFAULT_BLOW_WAVE_ALPHA = 50;
+    public final int DEFAULT_MIDDLE_WAVE_ALPHA = 50;
 
     private final float X_SPACE = 20;
     private final double PI2 = 2 * Math.PI;
 
     private Path mAboveWavePath = new Path();
     private Path mBlowWavePath = new Path();
+    private Path mMiddleWavePath = new Path();
 
     private Paint mAboveWavePaint = new Paint();
     private Paint mBlowWavePaint = new Paint();
+    private Paint mMiddleWavePaint = new Paint();
 
     private int mAboveWaveColor;
     private int mBlowWaveColor;
+    private int mMiddleWaveColor;
 
     private float mWaveMultiple;
     private float mWaveLength;
@@ -46,6 +50,7 @@ class Wave extends View {
     // wave animation
     private float mAboveOffset = 0.0f;
     private float mBlowOffset;
+    private float mMiddleOffset = 0.0f;
 
     private RefreshProgressRunnable mRefreshProgressRunnable;
 
@@ -67,6 +72,7 @@ class Wave extends View {
 
         canvas.drawPath(mBlowWavePath, mBlowWavePaint);
         canvas.drawPath(mAboveWavePath, mAboveWavePaint);
+        canvas.drawPath(mMiddleWavePath,mMiddleWavePaint);
     }
 
     public void setAboveWaveColor(int aboveWaveColor) {
@@ -77,6 +83,10 @@ class Wave extends View {
         this.mBlowWaveColor = blowWaveColor;
     }
 
+    public void setMiddleWaveColor(int middleWaveColor) {
+        this.mMiddleWaveColor = middleWaveColor;
+    }
+
     public Paint getAboveWavePaint() {
         return mAboveWavePaint;
     }
@@ -85,11 +95,16 @@ class Wave extends View {
         return mBlowWavePaint;
     }
 
+    public Paint getMiddleWavePaint() {
+        return mMiddleWavePaint;
+    }
+
     public void initializeWaveSize(int waveMultiple, int waveHeight, int waveHz) {
         mWaveMultiple = getWaveMultiple(waveMultiple);
         mWaveHeight = getWaveHeight(waveHeight);
         mWaveHz = getWaveHz(waveHz);
-        mBlowOffset = mWaveHeight * 0.4f;
+        mBlowOffset = mWaveHeight * 0.3f;
+        mMiddleOffset = mWaveHeight * 0.6f;
         ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
                 mWaveHeight * 2);
         setLayoutParams(params);
@@ -105,6 +120,11 @@ class Wave extends View {
         mBlowWavePaint.setAlpha(DEFAULT_BLOW_WAVE_ALPHA);
         mBlowWavePaint.setStyle(Paint.Style.FILL);
         mBlowWavePaint.setAntiAlias(true);
+
+        mMiddleWavePaint.setColor(mMiddleWaveColor);
+        mMiddleWavePaint.setAlpha(DEFAULT_MIDDLE_WAVE_ALPHA);
+        mMiddleWavePaint.setStyle(Paint.Style.FILL);
+        mMiddleWavePaint.setAntiAlias(true);
     }
 
     private float getWaveMultiple(int size) {
@@ -149,6 +169,7 @@ class Wave extends View {
     private void calculatePath() {
         mAboveWavePath.reset();
         mBlowWavePath.reset();
+        mMiddleWavePath.reset();
 
         getWaveOffset();
 
@@ -166,6 +187,13 @@ class Wave extends View {
             mBlowWavePath.lineTo(x, y);
         }
         mBlowWavePath.lineTo(right, bottom);
+
+        mMiddleWavePath.moveTo(left, bottom);
+        for (float x = 0; x <= mMaxRight; x += X_SPACE) {
+            y = (float) (mWaveHeight * Math.sin(omega * x + mMiddleOffset) + mWaveHeight);
+            mMiddleWavePath.lineTo(x, y);
+        }
+        mMiddleWavePath.lineTo(right, bottom);
     }
 
     @Override
@@ -226,6 +254,12 @@ class Wave extends View {
             mAboveOffset = 0;
         } else {
             mAboveOffset += mWaveHz;
+        }
+
+        if (mMiddleOffset > Float.MAX_VALUE - 100) {
+            mMiddleOffset = 0;
+        } else {
+            mMiddleOffset += mWaveHz;
         }
     }
 
