@@ -16,6 +16,7 @@ public class WaveView extends LinearLayout {
     protected static final int LARGE = 1;
     protected static final int MIDDLE = 2;
     protected static final int LITTLE = 3;
+    protected static final int SMALL = 4;
 
     private int mAboveWaveColor;
     private int mBlowWaveColor;

@@ -21,6 +21,7 @@ class Wave extends View {
     private final float WAVE_HZ_FAST = 0.13f;
     private final float WAVE_HZ_NORMAL = 0.09f;
     private final float WAVE_HZ_SLOW = 0.05f;
+    private final float WAVE_HZ_SLOW_DOWN = 0.02f;
 
     public final int DEFAULT_ABOVE_WAVE_ALPHA = 50;
     public final int DEFAULT_BLOW_WAVE_ALPHA = 50;
@@ -159,6 +160,8 @@ class Wave extends View {
                 return WAVE_HZ_NORMAL;
             case WaveView.LITTLE:
                 return WAVE_HZ_SLOW;
+            case WaveView.SMALL:
+                return WAVE_HZ_SLOW_DOWN;
         }
         return 0;
     }

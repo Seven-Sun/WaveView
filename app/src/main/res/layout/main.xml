@@ -14,7 +14,7 @@
         wave:middle_wave_color="@android:color/white"
         wave:progress="80"
         wave:wave_height="large"
-        wave:wave_hz="slow"
+        wave:wave_hz="slow_down"
         wave:wave_length="middle" />
 
     <SeekBar
